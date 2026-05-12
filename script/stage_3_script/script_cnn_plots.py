@@ -6,9 +6,6 @@ import torch
 import numpy as np
 import random
 
-# =========================
-# Set seeds for reproducibility
-# =========================
 seed = 42
 torch.manual_seed(seed)
 np.random.seed(seed)
@@ -16,17 +13,11 @@ random.seed(seed)
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(seed)
 
-# =========================
-# Dataset setup
-# =========================
 dataset_name = 'ORL'   # MNIST / CIFAR / ORL
 data_obj = Dataset_Loader(dataset_name, '')
 data_obj.dataset_source_folder_path = '../../data/stage_3_data/'
 data_obj.dataset_source_file_name = dataset_name
 
-# =========================
-# Load data only once
-# =========================
 print("loading data...")
 loaded_data = data_obj.load()
 print("data loaded successfully!")
@@ -36,20 +27,11 @@ X_test, y_test = loaded_data['X_test'], loaded_data['y_test']
 print(f"X_train: {X_train.shape}")
 print(f"X_test: {X_test.shape}")
 
-# =========================
-# Initialize CNN
-# =========================
 model = Method_CNN('CNN', '')
 model.acc_history = []  # record accuracy per epoch
 
-# =========================
-# Fit CNN
-# =========================
 metrics_dict = model.fit(X_train, y_train, X_test, y_test, epochs=30, batch_size=32)
 
-# =========================
-# Plot loss curve
-# =========================
 plt.figure()
 plt.plot(model.loss_history, label='Training Loss')
 plt.xlabel("Iteration")
@@ -59,9 +41,6 @@ plt.grid()
 plt.legend()
 plt.show()
 
-# =========================
-# Plot accuracy curve
-# =========================
 if hasattr(model, 'acc_history') and model.acc_history:
     plt.figure()
     plt.plot(model.acc_history, label='Training Accuracy')
@@ -74,9 +53,7 @@ if hasattr(model, 'acc_history') and model.acc_history:
 else:
     print("No accuracy history recorded in the model.")
 
-# =========================
-# Compute final metrics
-# =========================
+
 true_y = metrics_dict['true_y']
 pred_y = metrics_dict['pred_y']
 
@@ -91,10 +68,7 @@ print(f"F1 Score: {f1:.4f}")
 print(f"Precision: {precision:.4f}")
 print(f"Recall: {recall:.4f}")
 
-# =========================
-# Plot CNN architecture (minimal change)
-# =========================
-# Build layer names dynamically after fit()
+
 layers = []
 
 # Conv layers
